@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 //---------- CHANGE THIS NAME HERE -------
-public class TEAM_RED_SCRIPT : MonoBehaviour
+public class Uff_Da : MonoBehaviour
 {
     //private Vector3 position = new Vector3(20.0f, 0.0f, 20.0f);
 
@@ -30,10 +30,10 @@ public class TEAM_RED_SCRIPT : MonoBehaviour
 
     private team ourTeamColor;
     //---------- CHANGE THIS NAME HERE -------
-    public static TEAM_RED_SCRIPT AddYourselfTo(GameObject host)
+    public static Uff_Da AddYourselfTo(GameObject host)
     {
         //---------- CHANGE THIS NAME HERE -------
-        return host.AddComponent<TEAM_RED_SCRIPT>();
+        return host.AddComponent<Uff_Da>();
     }
 
     void Start()
