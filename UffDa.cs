@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class UffDa : MonoBehaviour {
 
     //private Vector3 position = new Vector3(20.0f, 0.0f, 20.0f);
@@ -53,13 +52,14 @@ public class UffDa : MonoBehaviour {
     {
         int currentSnipe = 0;
         //Start of POIs on map
-        Vector3 snipeSpotMid = new Vector3(-4.8f, 1.5f, 9.5f);
-        Vector3 snipeSpotMidRight = new Vector3(4.8f, 1.5f, 9.5f);
-        Vector3 snipeSpotRight = new Vector3(37f, 1.5f, -24f);
-        Vector3 snipeSpotLeft = new Vector3(-38f, 1.5f, 25f);
+        Vector3 snipeSpotMid = new Vector3(-7.8f, 1.5f, 17f);
+        Vector3 snipeSpotMidRight = new Vector3(7.8f, 1.5f, 17f);
+        Vector3 snipeSpotRight = new Vector3(56f, 1.5f, 27f);
+        Vector3 snipeSpotLeft = new Vector3(-50f, 1.5f, -31f);
         Vector3[] spots = { snipeSpotMid, snipeSpotMidRight, snipeSpotRight, snipeSpotLeft };
         //Easy vector3 of objectives
         Vector3 midPoint = middleObjective.transform.position;
+        midPoint = new Vector3(midPoint.x - .2f, 1.5f, midPoint.z + 1f);
         Vector3 leftPoint = leftObjective.transform.position;
         Vector3 rightPoint = rightObjective.transform.position;
 
@@ -68,150 +68,82 @@ public class UffDa : MonoBehaviour {
         ObjectiveScript[] points = { middleObjective, leftObjective, rightObjective };
 
         loadoutSet();
-        if(timer < 0.1)
-        {
-            character2.FaceClosestWaypoint();
-            character2.MoveChar(midPoint);
-        }
-        // place sniper in position, run to cover if attacked and low on HP
-        if (character1.getHP() > 50)
-        {
-            character1.MoveChar(midPoint - new Vector3(midPoint.x + 3,1.5f,midPoint.z+1.5f));
-            character1.SetFacing(midPoint);
-        }
-        else
-        {
-            switch (currentSnipe)
-            {
-                case 0:
-                    if(character1.isDoneMoving(1.3f))
-                    {
-                        currentSnipe++;
-                        character1.MoveChar(spots[currentSnipe]);
-                    }
-                break;
-                case 1:
-                    if (character1.isDoneMoving(1.3f))
-                    {
-                        currentSnipe++;
-                        character1.MoveChar(spots[currentSnipe]);
-                    }
-                    break;
-                case 2:
-                    if (character1.isDoneMoving(1.3f))
-                    {
-                        currentSnipe++;
-                        character1.MoveChar(spots[currentSnipe]);
-                    }
-                    break;
-                case 3:
-                    if (character1.isDoneMoving(1.3f))
-                    {
-                        currentSnipe++;
-                        character1.MoveChar(spots[currentSnipe]);
-                    }
-                    break;
-                case 4:
-                    character1.FindClosestItem();
-                    currentSnipe++;
-                    break;
-                default:
-                    currentSnipe = 0;
-                    break;
-            }
-        }
+
         //If we don't have the mid point
         if (middleObjective.getControllingTeam() != character1.getTeam())
         {
-            //If Guy 2 is on the point, send Guy 3 a non-team point or patrol
-            if(character2.isDoneMoving(1.3f))
+            // place sniper in position, run to cover if attacked and low on HP
+            if (character1.getHP() > 50)
             {
-                character2.rotateAngle(5f); //May not work
-                character2.MoveChar(character2.transform.position);
-                if(leftObjective.getControllingTeam() != character1.getTeam())
+                if (Vector3.Distance(character1.transform.position, midPoint) < 3)
                 {
-                    character3.SetFacing(leftPoint);
-                    character3.MoveChar(leftPoint);
-                }
-                else if (rightObjective.getControllingTeam() != character1.getTeam())
-                {
-                    character3.SetFacing(rightPoint);
-                    character3.MoveChar(rightPoint);
+                    character1.rotateAngle(75f);
                 }
                 else
                 {
-                    patrol();
+                    character1.MoveChar(midPoint);
+                    character1.SetFacing(midPoint);
                 }
             }
-            //If Guy 3 is on the point, send Guy 2 to non-team point or patrol
-            else if(character3.isDoneMoving(1.3f))
+            //After the sniper takes some damage
+            else
             {
-                character3.rotateAngle(5f); //May not work
-                character3.MoveChar(character2.transform.position);
-                if (leftObjective.getControllingTeam() != character1.getTeam())
-                {
-                    character2.SetFacing(leftPoint);
-                    character2.MoveChar(leftPoint);
-                }
-                else if (rightObjective.getControllingTeam() != character1.getTeam())
-                {
-                    character2.SetFacing(rightPoint);
-                    character2.MoveChar(rightPoint);
-                }
+                //Alternate poke points
+                if (Vector3.Distance(character1.transform.position, snipeSpotMid) < 1f)
+                    character1.MoveChar(snipeSpotMidRight);
                 else
-                {
-                    patrol();
-                }
+                    character1.MoveChar(snipeSpotMid);
             }
-            character2.MoveChar(midPoint);
-            character2.SetFacing(midPoint);
-            //character3.MoveChar(midPoint-new Vector3(midPoint.x-3,1.5f));
-            //character3.SetFacing(midPoint - new Vector3(midPoint.x - 3,1.5f));
+
         }
         else
         {
-            // Then left
-            if (leftObjective.getControllingTeam() != character1.getTeam())
+            // place sniper in position, run to cover if attacked and low on HP
+            if (character1.getHP() > 50)
             {
-                character2.MoveChar(leftPoint);
-                character2.SetFacing(leftPoint);
-                character3.MoveChar(rightPoint);
-                character3.SetFacing(rightPoint);
+                if (Vector3.Distance(character1.transform.position, midPoint) < 3)
+                {
+                    character1.rotateAngle(75f);
+                }
+                else
+                {
+                    character1.MoveChar(midPoint);
+                    character1.SetFacing(midPoint);
+                }
             }
-            // Then RIght
-            else if (rightObjective.getControllingTeam() != character1.getTeam())
+            //After the sniper takes some damage
+            else
             {
-                character2.MoveChar(rightPoint);
-                character2.SetFacing(rightPoint);
-                character3.MoveChar(leftPoint);
-                character3.SetFacing(leftPoint);
+                //Alternate poke points
+                if (Vector3.Distance(character1.transform.position, snipeSpotMid) < 1f)
+                    character1.MoveChar(snipeSpotMidRight);
+                else
+                    character1.MoveChar(snipeSpotMid);
             }
+
+        }
+        //Starter positions for the people (Guy 2 to Right, Guy 3 to Left)
+        if(rightObjective.getControllingTeam()!=character1.getTeam())
+        {
+            character2.MoveChar(new Vector3(rightPoint.x + 3f, 1.5f, rightPoint.z + 3f));
+            character2.SetFacing(new Vector3(midPoint.x, 1.5f, midPoint.z));
+        }
+        else
+        {
+            character2.MoveChar(snipeSpotRight);
+        }
+        if(leftObjective.getControllingTeam()!=character1.getTeam())
+        {
+            character3.MoveChar(leftPoint);
+            character3.SetFacing(new Vector3(midPoint.x, 1.5f, midPoint.z));
+        }
+        else
+        {
+            character3.MoveChar(snipeSpotLeft);
         }
 
-        foreach(CharacterScript x in squad)
-        {
-            if (x.getZone() == zone.Objective)
-            {
-                if(x.FindClosestObjective() == midPoint && middleObjective.getControllingTeam() != character1.getTeam() && Vector3.Distance(x.transform.position, x.FindClosestObjective()) < 4)
-                {
-                    x.MoveChar(x.transform.position);
-                    x.rotateAngle(5f);
-                }
-                else if (x.FindClosestObjective() == leftPoint && leftObjective.getControllingTeam() != character1.getTeam() && Vector3.Distance(x.transform.position, x.FindClosestObjective()) < 4)
-                {
-                    x.MoveChar(x.transform.position);
-                    x.rotateAngle(5f);
-                }
-                else if (x.FindClosestObjective() == rightPoint && rightObjective.getControllingTeam() != character1.getTeam() && Vector3.Distance(x.transform.position, x.FindClosestObjective()) < 4)
-                {
-                    x.MoveChar(x.transform.position);
-                    x.rotateAngle(5f);
-                }
-            }
-            {
-                
-            }
-        }
+
+        
     }
 
     // a simple function to track game time
@@ -220,11 +152,6 @@ public class UffDa : MonoBehaviour {
         timer += 1;
     }
 
-    //Routine to go on patrol
-    public void patrol()
-    {
-
-    }
 
     void loadoutSet()
     {
